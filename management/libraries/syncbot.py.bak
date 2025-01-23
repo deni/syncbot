@@ -20,28 +20,23 @@ def fetch():
 		
 		if isinstance(watchlist, list):
 			for watchlist_item in watchlist:
-				watchlist_item_id = int( watchlist_item['pageid'] )
+				watchlist_item_name = watchlist_item['title']
 				watchlist_item_revision = int( watchlist_item['revid'] )
 				
 				try:
 					page = Page.objects.get(
+						name = watchlist_item_name,
 						project = project,
-						page_id = watchlist_item_id,
 					)
 				except Page.DoesNotExist:
 					logger.warning("The API returned a watchlist page that was not found locally")
 				
-				watchlist_item_name = watchlist_item['title']
-				if page.name != watchlist_item_name:
-					page.name = watchlist_item_name
-					page.save() # Eventually figure out if multiple save() calling have to be eliminated.
-				
 				if watchlist_item_revision > page.revision:
 					page.revision = 0
 					page.save()
-					logger.info(f"The page {page.name} on {project} was marked as updated")
+					logger.info(f"The page {watchlist_item_name} on {project} was marked as updated")
 				else:
-					logger.info(f"The watchlist item for page {page.name} on {project} is an older revision and was ignored")
+					logger.info(f"The watchlist item for page {watchlist_item_name} on {project} is an older revision and was ignored")
 		else:
 			raise CommandError('The JSON object returned from the MediaWiki API was not formatted as expected')
 		
@@ -67,7 +62,7 @@ def synchronize():
 			source_response = mediawiki.page_read(
 				source.project.domain,
 				token,
-				source.page_id,
+				source.name,
 			)
 			
 			source_latest = source_response['query']['pages'][0]['revisions'][0]
@@ -88,7 +83,7 @@ def synchronize():
 				result = mediawiki.page_edit(
 					target.project.domain,
 					token,
-					target.page_id,
+					target.name,
 					target.revision,
 					source_latest_content,
 					summary,

@@ -78,7 +78,7 @@ def get_csrf(domain, token):
 def page_edit(
 	domain,
 	token,
-	page_id,
+	page_name,
 	base_revision,
 	text,
 	summary,
@@ -88,7 +88,7 @@ def page_edit(
 	
 	data_specific = {
 		'action': 'edit',
-		'pageid': page_id,
+		'title': page_name,
 		'text': text,
 		'summary': summary,
 		'bot': 1,
@@ -112,12 +112,12 @@ def page_edit(
 def page_read(
 	domain,
 	token,
-	page_id,
+	page_name,
 ):
 	data_specific = {
 		'action': 'query',
 		'prop': 'revisions',
-		'pageids': page_id,
+		'titles': page_name,
 		'rvprop': 'flags|content|ids',
 		'rvslots': '*',
 	}
