@@ -1,11 +1,15 @@
 from threading import Thread
 import time
 import random
+import traceback
 
 def loop(interval, func):
 	time.sleep(random.randint(5, 60)) # offset / jitter
 	while True:
-		func()
+		try:
+			func()
+		except Exception:
+			traceback.print_exc()
 		time.sleep(interval)
 
 def schedule(interval, func):
