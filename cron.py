@@ -15,7 +15,7 @@ def schedule(interval, func):
 	t.start()
 
 def helloWorld():
-	print('Hello world')
+	print('Hello world', flush=True)
 
 def runCronTasks():
 	schedule(10, helloWorld)
