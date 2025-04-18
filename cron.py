@@ -33,5 +33,6 @@ def synchronize():
 	logger.info("Finished running syncbot.synchronize.")
 
 def runCronTasks():
+	pass
 	#schedule(10, fetch)
 	#schedule(10, synchronize)
